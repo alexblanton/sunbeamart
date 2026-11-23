@@ -1,0 +1,7 @@
+{
+  // Only used to apply migrations to the preview database: npm run db:migrate:preview
+  "name": "sunbeam-arthouse",
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sunbeam-db-preview", "database_id": "30ecf35d-099d-4384-b4f3-1aca32e587c2", "migrations_dir": "migrations" }
+  ]
+}

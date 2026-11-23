@@ -10,7 +10,8 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "db:migrate": "wrangler d1 migrations apply sunbeam-db --remote",
-    "db:migrate:local": "wrangler d1 migrations apply sunbeam-db --local"
+    "db:migrate:local": "wrangler d1 migrations apply sunbeam-db --local",
+    "db:migrate:preview": "wrangler d1 migrations apply DB --remote --config wrangler.preview-migrations.jsonc"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.18",
