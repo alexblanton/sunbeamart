@@ -2,8 +2,8 @@ import { AdminShell } from "@/components/AdminShell";
 import { toggleInquiryAction } from "@/app/admin/actions";
 import { listInquiries } from "@/lib/store";
 
-export default function Requests() {
-  const items = listInquiries();
+export default async function Requests() {
+  const items = await listInquiries();
   return (
     <AdminShell current="/admin/requests">
       <div>

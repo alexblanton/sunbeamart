@@ -4,8 +4,8 @@ import { listCamps } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const upcoming = listCamps();
+export default async function Home() {
+  const upcoming = await listCamps();
   return (
     <Page>
       <section className="hero" aria-label="Welcome">

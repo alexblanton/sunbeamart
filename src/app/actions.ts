@@ -12,7 +12,7 @@ export async function submitContact(_: FormState, f: FormData): Promise<FormStat
   const email = str(f, "email");
   const message = str(f, "message");
   if (!name || !emailOk(email) || !message) return { ok: false, error: "Please add your name, a valid email and a message." };
-  addInquiry({ kind: "Message", from: `${name} <${email}>`, email, summary: `${str(f, "topic")}: ${message}` });
+  await addInquiry({ kind: "Message", from: `${name} <${email}>`, email, summary: `${str(f, "topic")}: ${message}` });
   return { ok: true };
 }
 
@@ -23,7 +23,7 @@ export async function submitParty(_: FormState, f: FormData): Promise<FormState>
   const bits = [str(f, "type"), str(f, "date") && `on ${str(f, "date")}`, str(f, "guests") && `${str(f, "guests")} guests`, str(f, "ages") && `ages ${str(f, "ages")}`, str(f, "notes")]
     .filter(Boolean)
     .join(" · ");
-  addInquiry({ kind: "Party request", from: `${name} <${email}>`, email, summary: bits });
+  await addInquiry({ kind: "Party request", from: `${name} <${email}>`, email, summary: bits });
   return { ok: true };
 }
 
@@ -46,15 +46,16 @@ export type RegistrationResult = { ok: true; id: string; totalCents: number } | 
 // Demo checkout: records the registration as "Paid (demo)". Real card payments
 // (Stripe Checkout) replace this step once a Stripe account is connected.
 export async function completeRegistration(input: RegistrationInput): Promise<RegistrationResult> {
-  const camp = getCamp(input.campId);
+  const camp = await getCamp(input.campId);
   if (!camp || !camp.published) return { ok: false, error: "That camp is no longer available." };
   const campers = input.campers.filter((c) => c.first.trim() && c.last.trim());
   if (campers.length === 0) return { ok: false, error: "Add at least one camper." };
   if (!emailOk(input.parentEmail.trim()) || !input.parentName.trim()) return { ok: false, error: "Add a parent name and a valid email." };
   if (!input.waiverSigned) return { ok: false, error: "Please agree to the waiver to continue." };
-  if (campers.length > spotsLeft(camp)) return { ok: false, error: `Only ${spotsLeft(camp)} spot(s) left in this camp.` };
+  const left = await spotsLeft(camp);
+  if (campers.length > left) return { ok: false, error: `Only ${left} spot(s) left in this camp.` };
 
-  const reg = addRegistration({
+  const reg = await addRegistration({
     campId: camp.id,
     campers,
     parentName: input.parentName.trim(),

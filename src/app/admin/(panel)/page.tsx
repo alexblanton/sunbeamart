@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { filledSpots, listCamps, listRegistrations, money } from "@/lib/store";
+import { filledSpotsByCamp, listCamps, listRegistrations, money } from "@/lib/store";
 
-export default function AdminCamps() {
-  const camps = listCamps(true);
-  const regs = listRegistrations().filter((r) => r.status !== "Refunded");
+export default async function AdminCamps() {
+  const camps = await listCamps(true);
+  const filledBy = await filledSpotsByCamp();
+  const regs = (await listRegistrations()).filter((r) => r.status === "paid");
   const collected = regs.reduce((n, r) => n + r.totalCents, 0);
-  const open = camps.filter((c) => c.published).reduce((n, c) => n + Math.max(0, c.capacity - filledSpots(c.id)), 0);
+  const open = camps.filter((c) => c.published).reduce((n, c) => n + Math.max(0, c.capacity - (filledBy[c.id] ?? 0)), 0);
   return (
     <AdminShell current="/admin">
       <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
@@ -28,7 +29,7 @@ export default function AdminCamps() {
           </thead>
           <tbody>
             {camps.map((c) => {
-              const filled = filledSpots(c.id);
+              const filled = filledBy[c.id] ?? 0;
               const full = filled >= c.capacity;
               return (
                 <tr key={c.id}>
