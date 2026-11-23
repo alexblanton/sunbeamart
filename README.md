@@ -39,7 +39,7 @@ The Worker is `sunbeam-arthouse` (connected to this repo through Workers Builds)
 ```bash
 npx wrangler login
 npx wrangler secret put ADMIN_PASSWORD
-npm run deploy             # build + upload; preview URL is sunbeamart.<account>.workers.dev
+npm run deploy             # build + upload; preview URL is sunbeam-arthouse.<account>.workers.dev (a plain `npx wrangler deploy` also builds first)
 npm run db:migrate         # only when a new file is added under migrations/
 ```
 

@@ -2,6 +2,8 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "sunbeam-arthouse",
   "main": ".open-next/worker.js",
+  // Lets a plain `wrangler deploy` (including Workers Builds) build the site first.
+  "build": { "command": "npx opennextjs-cloudflare build" },
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
