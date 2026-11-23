@@ -34,7 +34,7 @@ Admin password: set `ADMIN_PASSWORD` (a Worker secret in production, `.dev.vars`
 
 ## Deploy to Cloudflare
 
-The Worker is `sunbeamart` and the database is `sunbeam-db` (both in `wrangler.jsonc`). The live database already has the schema and starting events applied.
+The Worker is `sunbeam-arthouse` (connected to this repo through Workers Builds) and the database is `sunbeam-db` (both in `wrangler.jsonc`). The live database already has the schema and starting events applied.
 
 ```bash
 npx wrangler login
