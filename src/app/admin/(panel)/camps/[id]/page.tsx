@@ -14,7 +14,7 @@ const photos = [
 export default async function EditCamp({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const isNew = id === "new";
-  const c = isNew ? undefined : getCamp(id);
+  const c = isNew ? undefined : await getCamp(id);
   if (!isNew && !c) notFound();
   return (
     <AdminShell current="/admin">

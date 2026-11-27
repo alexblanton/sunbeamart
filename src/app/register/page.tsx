@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 export default async function Register({ searchParams }: { searchParams: Promise<{ camp?: string }> }) {
   const { camp: id } = await searchParams;
-  const camp = (id && getCamp(id)) || listCamps()[0];
-  const left = camp ? spotsLeft(camp) : 0;
+  const camp = (id && (await getCamp(id))) || (await listCamps())[0];
+  const left = camp ? await spotsLeft(camp) : 0;
   return (
     <Page current="/camps">
       <div className="wrap" style={{ padding: "56px 24px 96px" }}>

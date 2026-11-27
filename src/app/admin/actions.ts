@@ -20,7 +20,7 @@ export async function saveCampAction(f: FormData) {
   await requireAdmin();
   const dollars = Number(String(f.get("price") ?? "0").replace(/[^0-9.]/g, "")) || 0;
   const id = String(f.get("id") ?? "") || undefined;
-  saveCamp({
+  await saveCamp({
     id,
     name: String(f.get("name") ?? "").trim() || "Untitled camp",
     kind: String(f.get("kind") ?? "Summer camp") as Camp["kind"],
@@ -43,12 +43,12 @@ export async function saveCampAction(f: FormData) {
 
 export async function refundAction(f: FormData) {
   await requireAdmin();
-  refundRegistration(String(f.get("id")));
+  await refundRegistration(String(f.get("id")));
   revalidatePath("/admin/registrations");
 }
 
 export async function toggleInquiryAction(f: FormData) {
   await requireAdmin();
-  toggleInquiry(String(f.get("id")));
+  await toggleInquiry(String(f.get("id")));
   revalidatePath("/admin/requests");
 }

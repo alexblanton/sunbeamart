@@ -2,7 +2,7 @@
 
 New site for Sunbeam Art House: promote camps and events, take registrations and payments directly.
 
-This is the **first demo**. It runs end to end, but uses an in-memory store and a demo checkout.
+This is the **first demo**. It runs on Cloudflare Workers with a D1 database, and uses a demo checkout.
 
 ## What works today
 
@@ -15,21 +15,37 @@ This is the **first demo**. It runs end to end, but uses an in-memory store and 
 
 | Area | Demo behavior | Planned |
 | --- | --- | --- |
-| Data | In memory, resets on restart (`src/lib/store.ts`) | Supabase |
 | Payment | "Paid (demo)", no card is charged | Stripe Checkout |
 | Reminder emails | Listed, not sent | Resend or Postmark, hourly scheduled job |
 | Prices, ages, waiver, founder bio | Sample values and `[PLACEHOLDERS]` | Real details from Sunbeam |
-| Photo upload in admin | Pick from existing photos | Supabase storage |
+| Photo upload in admin | Pick from existing photos | R2 upload |
 
-## Run it
+## Run it locally
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+npm run db:migrate:local   # creates the local D1 database from migrations/
+npm run preview            # builds for Workers and runs it in workerd at http://localhost:8787
 ```
 
-Admin password: set `ADMIN_PASSWORD`. The demo falls back to `sunbeam-demo`, so set a real one before sharing the site.
+`npm run dev` also works for quick UI edits (D1 is available through the Cloudflare dev bindings).
+
+Admin password: set `ADMIN_PASSWORD` (a Worker secret in production, `.dev.vars` locally). The demo falls back to `sunbeam-demo`. Phase 3 replaces this with Cloudflare Access.
+
+## Deploy to Cloudflare
+
+The Worker is `sunbeam-arthouse` (connected to this repo through Workers Builds) and the database is `sunbeam-db` (both in `wrangler.jsonc`). The live database already has the schema and starting events applied.
+
+```bash
+npx wrangler login
+npx wrangler secret put ADMIN_PASSWORD
+npm run deploy             # build + upload; preview URL is sunbeam-arthouse.<account>.workers.dev (a plain `npx wrangler deploy` also builds first)
+npm run db:migrate         # only when a new file is added under migrations/ (production database)
+npm run db:migrate:preview # same, for the preview database (sunbeam-db-preview) used by PR branch previews
+```
+
+Changing `wrangler.jsonc` bindings: rerun `npm run cf-typegen`.
 
 ## Stack
 
-Next.js (App Router, server actions), TypeScript, plain CSS.
+Next.js 15 (App Router, server actions) on Cloudflare Workers via OpenNext, D1 (SQLite), plain CSS. Full plan: the "Cloudflare Build Plan" doc in the project.

@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Page } from "@/components/SiteChrome";
 import { CampsList, type CampCard } from "@/components/CampsList";
-import { listCamps, money, spotsLeft } from "@/lib/store";
+import { filledSpotsByCamp, listCamps, money } from "@/lib/store";
 
 export const metadata = { title: "Camps & Events" };
 export const dynamic = "force-dynamic";
 
-export default function Camps() {
-  const camps: CampCard[] = listCamps().map((c) => ({
+export default async function Camps() {
+  const filledBy = await filledSpotsByCamp();
+  const camps: CampCard[] = (await listCamps()).map((c) => ({
     id: c.id,
     name: c.name,
     kind: c.kind,
@@ -20,7 +21,7 @@ export default function Camps() {
     blurb: c.blurb,
     image: c.image,
     imagePos: c.imagePos,
-    spotsLeft: spotsLeft(c),
+    spotsLeft: Math.max(0, c.capacity - (filledBy[c.id] ?? 0)),
   }));
   return (
     <Page current="/camps">

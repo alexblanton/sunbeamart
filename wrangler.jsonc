@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sunbeam-arthouse",
+  "main": ".open-next/worker.js",
+  // Lets a plain `wrangler deploy` (including Workers Builds) build the site first.
+  "build": { "command": "npx opennextjs-cloudflare build" },
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sunbeam-db", "database_id": "8a2d5482-53a6-4f06-bb83-119cc1a2948f", "migrations_dir": "migrations" }
+  ],
+  "preview_urls": true,
+  "observability": { "enabled": true },
+  // Branch previews (what Workers Builds runs on pull requests) use their own database, never production's.
+  "previews": {
+    "d1_databases": [
+      { "binding": "DB", "database_name": "sunbeam-db-preview", "database_id": "30ecf35d-099d-4384-b4f3-1aca32e587c2" }
+    ]
+  }
+}

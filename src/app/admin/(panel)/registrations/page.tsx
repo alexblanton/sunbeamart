@@ -4,8 +4,10 @@ import { getCamp, listCamps, listRegistrations, money } from "@/lib/store";
 
 export default async function Registrations({ searchParams }: { searchParams: Promise<{ camp?: string }> }) {
   const { camp: campId } = await searchParams;
-  const regs = listRegistrations(campId);
-  const camp = campId ? getCamp(campId) : undefined;
+  const regs = await listRegistrations(campId);
+  const camp = campId ? await getCamp(campId) : undefined;
+  const allCamps = await listCamps(true);
+  const whereById = Object.fromEntries(allCamps.map((c) => [c.id, c.where]));
   return (
     <AdminShell current="/admin/registrations">
       <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
@@ -17,7 +19,7 @@ export default async function Registrations({ searchParams }: { searchParams: Pr
           <label htmlFor="camp" style={{ position: "absolute", left: -9999 }}>Choose camp</label>
           <select id="camp" name="camp" defaultValue={campId ?? ""} style={{ width: "auto" }}>
             <option value="">All camps</option>
-            {listCamps(true).map((c) => <option key={c.id} value={c.id}>{c.name} · {c.where}</option>)}
+            {allCamps.map((c) => <option key={c.id} value={c.id}>{c.name} · {c.where}</option>)}
           </select>
           <button className="btn outline small" style={{ minHeight: 48 }}>Filter</button>
         </form>
@@ -31,14 +33,14 @@ export default async function Registrations({ searchParams }: { searchParams: Pr
             <tbody>
               {regs.map((r) => (
                 <tr key={r.id}>
-                  <td><strong>{r.campers.map((c) => `${c.first} ${c.last} (${c.age})`).join(", ")}</strong><div className="small">{getCamp(r.campId)?.where}</div></td>
+                  <td><strong>{r.campers.map((c) => `${c.first} ${c.last} (${c.age})`).join(", ")}</strong><div className="small">{whereById[r.campId]}</div></td>
                   <td>{r.parentName}<div className="small">{r.parentEmail}</div></td>
                   <td className="muted">{r.campers.map((c) => c.notes).filter(Boolean).join("; ") || "—"}{r.pickup ? <div className="small">Pickup: {r.pickup}</div> : null}</td>
                   <td>{r.textOptIn ? "Opted in" : "No"}</td>
                   <td>{money(r.totalCents)}</td>
-                  <td><span className={`pill ${r.status === "Refunded" ? "" : "ok"}`}>{r.status}</span></td>
+                  <td><span className={`pill ${r.status === "paid" ? "ok" : ""}`}>{r.status === "paid" ? "Paid (demo)" : r.status[0].toUpperCase() + r.status.slice(1)}</span></td>
                   <td style={{ textAlign: "right" }}>
-                    {r.status !== "Refunded" && (
+                    {r.status === "paid" && (
                       <form action={refundAction}><input type="hidden" name="id" value={r.id} /><button className="btn outline small">Refund</button></form>
                     )}
                   </td>
