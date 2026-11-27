@@ -45,16 +45,16 @@ export function CampsList({ camps }: { camps: CampCard[] }) {
         ))}
       </div>
 
-      <div className="grid-camps" style={{ marginTop: 32 }}>
+      <div className="grid-camps three" style={{ marginTop: 24 }} aria-live="polite">
         {shown.map((c) => (
           <article className="card" key={c.id}>
-            <div style={{ position: "relative", height: 220 }}>
-              <img src={c.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: c.imagePos }} />
-              <span className="tag" style={{ position: "absolute", top: 14, left: 14 }}>{c.season}</span>
+            <div className="media">
+              <img src={c.image} alt="" style={{ objectPosition: c.imagePos }} />
+              <span className="tag">{c.season}</span>
             </div>
             <div className="body" style={{ gap: 14 }}>
-              <div>
-                <h2 style={{ fontSize: 26 }}>{c.name}</h2>
+              <div className="stack" style={{ gap: 6 }}>
+                <h2>{c.name}</h2>
                 <p className="muted" style={{ fontSize: 15 }}>{c.blurb}</p>
               </div>
               <dl className="facts">
@@ -66,12 +66,12 @@ export function CampsList({ camps }: { camps: CampCard[] }) {
               <div className="price-row">
                 <div>
                   <div className="price">{c.price}</div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: c.spotsLeft ? "var(--sage)" : "#8a3a22" }}>
+                  <div className={`spots${c.spotsLeft ? "" : " full"}`}>
                     {c.spotsLeft ? `${c.spotsLeft} spots left` : "Full"}
                   </div>
                 </div>
                 {c.spotsLeft ? (
-                  <Link href={`/register?camp=${c.id}`} className="btn">Register</Link>
+                  <Link href={`/register?camp=${c.id}`} className="btn" aria-label={`Register for ${c.name}, ${c.dates}`}>Register</Link>
                 ) : (
                   <Link href="/contact" className="btn outline">Join waitlist</Link>
                 )}
@@ -80,7 +80,7 @@ export function CampsList({ camps }: { camps: CampCard[] }) {
           </article>
         ))}
       </div>
-      {shown.length === 0 && <p className="muted" style={{ marginTop: 32 }}>Nothing matches that filter yet.</p>}
+      {shown.length === 0 && <p className="muted" style={{ marginTop: 24 }}>Nothing matches that filter yet.</p>}
     </>
   );
 }

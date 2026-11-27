@@ -1,11 +1,5 @@
 import Link from "next/link";
-
-const links = [
-  { href: "/camps", label: "Camps & Events" },
-  { href: "/parties", label: "Art Parties" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+import { MainNav } from "./MainNav";
 
 export function Header({ current }: { current?: string }) {
   return (
@@ -13,16 +7,11 @@ export function Header({ current }: { current?: string }) {
       <div className="demo-banner">Demo site: sample prices, and no card is charged.</div>
       <header className="site-header">
         <div className="wrap">
-          <Link href="/" className="logo">
+          <Link href="/" className="logo" aria-label="Sunbeam Art House home">
             <img src="/images/logo.jpg" alt="Sunbeam Art House" width={92} height={92} />
+            <span className="logo-name">Sunbeam Art House</span>
           </Link>
-          <nav className="nav" aria-label="Main">
-            {links.map((l) => (
-              <Link key={l.href} href={l.href} aria-current={current === l.href ? "page" : undefined}>
-                {l.label}
-              </Link>
-            ))}
-          </nav>
+          <MainNav current={current} />
         </div>
       </header>
     </>
@@ -33,12 +22,17 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div className="wrap">
-        <span className="brand">Sunbeam Art House</span>
-        <div className="links">
+        <div>
+          <span className="brand">Sunbeam Art House</span>
+          <p className="footer-tag">Creative sunshine for your soul.</p>
+        </div>
+        <nav className="links" aria-label="Footer">
+          <Link href="/camps">Camps &amp; Events</Link>
+          <Link href="/parties">Art Parties</Link>
           <Link href="/contact">Contact us</Link>
           <a href="#">Instagram</a>
           <a href="#">Facebook</a>
-        </div>
+        </nav>
       </div>
     </footer>
   );
