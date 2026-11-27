@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { checkPassword, clearAdminCookie, requireAdmin, setAdminCookie } from "@/lib/auth";
+import { adminMode, checkPassword, clearAdminCookie, requireAdmin, setAdminCookie } from "@/lib/auth";
 import { refundRegistration, saveCamp, toggleInquiry, type Camp } from "@/lib/store";
 
 export async function login(_: { error?: string }, f: FormData) {
@@ -13,7 +13,8 @@ export async function login(_: { error?: string }, f: FormData) {
 
 export async function logout() {
   await clearAdminCookie();
-  redirect("/admin/login");
+  // Ends the Cloudflare Access session too, so the next visit asks for a new email code.
+  redirect(adminMode() === "access" ? "/cdn-cgi/access/logout" : "/admin/login");
 }
 
 export async function saveCampAction(f: FormData) {

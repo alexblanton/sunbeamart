@@ -9,6 +9,7 @@
     "start": "next start -p ${PORT:-3000}",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "test": "node scripts/test-access.mts",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "db:migrate": "wrangler d1 migrations apply sunbeam-db --remote",
     "db:migrate:local": "wrangler d1 migrations apply sunbeam-db --local",
