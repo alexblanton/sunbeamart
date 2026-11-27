@@ -36,11 +36,11 @@ npm run preview            # builds for Workers and runs it in workerd at http:/
 
 | Where | How you sign in |
 | --- | --- |
-| Production | **Cloudflare Access**: enter your email, get a one-time code. Needs `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`. Every admin request's Access token is verified in the app, and `ADMIN_EMAILS` (optional, comma-separated) narrows it further. |
+| Production | **Cloudflare Access**: Access's own sign-in screen (your Cloudflare account, or an email code if the One-time PIN login method is added). Needs `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`. Every admin request's Access token is verified in the app, and `ADMIN_EMAILS` (optional, comma-separated) narrows it further. |
 | Production, fallback | An `ADMIN_PASSWORD` Worker secret, if Access isn't set up. With neither, admin is locked. |
 | Branch previews, `npm run dev` | Demo password `sunbeam-demo` (previews set `DEMO_ADMIN=1`; for `npm run preview` put it in `.dev.vars`). |
 
-Setting up Access (once): Zero Trust > Access > Applications > Add an application > Self-hosted. Domain `sunbeam-arthouse.alex-blanton.workers.dev`, path `admin`. Add an Allow policy for your email. Then copy the team domain (Zero Trust > Settings) and the app's Application Audience (AUD) Tag into `wrangler.jsonc` `vars`.
+Setting up Access (once): Zero Trust > Access > Applications > Add an application > Self-hosted. Domain `sunbeam-arthouse.alex-blanton.workers.dev`, path `admin`. Add an Allow policy for your email, leave "Accept all available identity providers" on. Then copy the team domain (Zero Trust > Settings) and the app's Application Audience (AUD) Tag into `wrangler.jsonc` `vars`.
 
 `npm test` checks the Access token verification.
 

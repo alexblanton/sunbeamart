@@ -12,12 +12,12 @@
   ],
   "preview_urls": true,
   "observability": { "enabled": true },
-  // Admin sign-in (see src/lib/auth.ts). Production uses Cloudflare Access once these two are filled in
-  // from Zero Trust > Access > Applications (team domain, and the app's "Application Audience (AUD) Tag").
-  // Until then, production admin is locked unless an ADMIN_PASSWORD secret is set.
+  // Admin sign-in (see src/lib/auth.ts): Cloudflare Access app for /admin on sunbeam-arthouse.alex-blanton.workers.dev.
+  // Team domain is under Zero Trust > Settings; the AUD tag is the Access app's "Application Audience (AUD) Tag".
+  // Neither is a secret.
   "vars": {
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    "ACCESS_TEAM_DOMAIN": "long-haze-2aaf.cloudflareaccess.com",
+    "ACCESS_AUD": "b40c4c4777ea93510f61f8e1ebede0340e37a06ab1d3f80db591087cba80482b"
   },
   // Branch previews (what Workers Builds runs on pull requests) use their own database, never production's,
   // and keep the demo admin password since they only hold sample data. Preview vars are not inherited.
