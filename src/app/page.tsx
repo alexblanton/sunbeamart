@@ -4,6 +4,12 @@ import { listCamps } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
+const tiles = [
+  { href: "/camps", img: "/images/summer-camps.jpg", title: "Camps & Events", text: "Summer camps and multi-week programs like Art from Around the World.", more: "See camps & register" },
+  { href: "/parties", img: "/images/art-parties.jpg", title: "Art Parties", text: "Custom themed parties, or a Neighborhood Art Party right in your front yard.", more: "Plan a party" },
+  { href: "/about", img: "/images/process-art-stock.jpg", title: "Our Approach", text: "Process over product: we value the artist's journey over the end result.", more: "About Sunbeam" },
+];
+
 export default async function Home() {
   const upcoming = await listCamps();
   return (
@@ -14,65 +20,57 @@ export default async function Home() {
           <p className="eyebrow">Art camps, parties &amp; events</p>
           <h1>Creative sunshine for your soul.</h1>
           <p>Hands-on art camps, parties and community events for kids and families, hosted at studios and spaces around town.</p>
+          <div className="hero-actions">
+            <Link href="/camps" className="btn block-sm">Find a camp</Link>
+            <Link href="/parties" className="btn light block-sm">Plan a party</Link>
+          </div>
         </div>
       </section>
 
-      <section className="wrap" style={{ padding: "48px 24px 96px" }} aria-label="What we offer">
+      <section className="wrap section" aria-label="What we offer">
         <div className="grid-3">
-          <Link href="/camps" className="card">
-            <img className="cover" src="/images/summer-camps.jpg" alt="" />
-            <div className="body">
-              <h2>Camps &amp; Events</h2>
-              <p className="muted">Summer camps and multi-week programs like Art from Around the World.</p>
-              <span className="more">See camps &amp; register →</span>
-            </div>
-          </Link>
-          <Link href="/parties" className="card">
-            <img className="cover" src="/images/art-parties.jpg" alt="" />
-            <div className="body">
-              <h2>Art Parties</h2>
-              <p className="muted">Custom themed parties, or a Neighborhood Art Party right in your front yard.</p>
-              <span className="more">Plan a party →</span>
-            </div>
-          </Link>
-          <Link href="/about" className="card">
-            <img className="cover" src="/images/process-art-stock.jpg" alt="" />
-            <div className="body">
-              <h2>Our Approach</h2>
-              <p className="muted">Process over product: we value the artist's journey over the end result.</p>
-              <span className="more">About Sunbeam →</span>
-            </div>
-          </Link>
+          {tiles.map((t) => (
+            <Link key={t.href} href={t.href} className="card tile">
+              <img className="cover" src={t.img} alt="" />
+              <div className="body">
+                <h2>{t.title}</h2>
+                <p className="muted">{t.text}</p>
+                <span className="more">{t.more} →</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
       <section className="band">
         <div className="wrap section">
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: 16, marginBottom: 32 }}>
-            <h2 className="title">Coming up</h2>
-            <Link href="/camps" style={{ fontWeight: 600 }}>View all camps &amp; events</Link>
+          <div className="section-head">
+            <h2 className="section-title">Coming up</h2>
+            <Link href="/camps">View all camps &amp; events</Link>
           </div>
-          <div style={{ borderTop: "1px solid #dccfbc" }}>
+          <div className="upcoming">
             {upcoming.map((c) => (
               <div className="row" key={c.id}>
                 <div className="date">{c.dates}</div>
                 <div className="what">
-                  <div style={{ fontWeight: 600, fontSize: 18 }}>{c.name}</div>
-                  <div className="muted" style={{ fontSize: 15 }}>{c.where}{c.time.startsWith("[") ? "" : ` · ${c.time}`}</div>
+                  <div className="name">{c.name}</div>
+                  <div className="where">{c.where}{c.time.startsWith("[") ? "" : ` · ${c.time}`}</div>
                 </div>
-                <Link href={`/register?camp=${c.id}`} className="btn outline small">Register</Link>
+                <Link href={`/register?camp=${c.id}`} className="btn outline small" aria-label={`Register for ${c.name}, ${c.dates}`}>Register</Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="wrap section" style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center", justifyContent: "space-between" }}>
-        <div>
-          <h2 className="title" style={{ fontSize: 36 }}>Questions? Say hello.</h2>
-          <p className="muted">We'll get back to you within [X] days.</p>
+      <section className="wrap section">
+        <div className="cta-row">
+          <div>
+            <h2>Questions? Say hello.</h2>
+            <p className="muted">We'll get back to you within [X] days.</p>
+          </div>
+          <Link href="/contact" className="btn">Send us a message</Link>
         </div>
-        <Link href="/contact" className="btn">Send us a message</Link>
       </section>
     </Page>
   );

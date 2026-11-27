@@ -12,8 +12,8 @@ export default async function Register({ searchParams }: { searchParams: Promise
   const left = camp ? await spotsLeft(camp) : 0;
   return (
     <Page current="/camps">
-      <div className="wrap" style={{ padding: "56px 24px 96px" }}>
-        <p style={{ marginBottom: 24 }}><Link href="/camps" style={{ fontSize: 15, fontWeight: 600 }}>← Back to camps &amp; events</Link></p>
+      <div className="wrap" style={{ paddingTop: 12, paddingBottom: 72 }}>
+        <p style={{ marginBottom: 8 }}><Link href="/camps" className="back-link">← Back to camps &amp; events</Link></p>
         {camp && camp.published && left > 0 ? (
           <RegisterWizard
             key={camp.id}
@@ -27,9 +27,9 @@ export default async function Register({ searchParams }: { searchParams: Promise
           />
         ) : (
           <div className="notice">
-            <h1 style={{ fontSize: 32 }}>This camp is full.</h1>
+            <h1 style={{ fontSize: 30 }}>This camp is full.</h1>
             <p className="muted" style={{ margin: "8px 0 16px" }}>Contact us to join the waitlist, or pick another camp.</p>
-            <Link href="/camps" className="btn">See camps</Link>
+            <Link href="/camps" className="btn block-sm">See camps</Link>
           </div>
         )}
       </div>

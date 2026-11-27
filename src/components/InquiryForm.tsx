@@ -18,7 +18,7 @@ export function ContactForm() {
     <form className="form" action={action} aria-label="Contact Sunbeam Art House">
       <div className="field"><label htmlFor="cn">Name</label><input id="cn" name="name" autoComplete="name" required /></div>
       <div className="field"><label htmlFor="ce">Email</label><input id="ce" name="email" type="email" autoComplete="email" required /></div>
-      <div className="field"><label htmlFor="cp">Phone (optional)</label><input id="cp" name="phone" type="tel" autoComplete="tel" /></div>
+      <div className="field"><label htmlFor="cp">Phone (optional)</label><input id="cp" name="phone" type="tel" inputMode="tel" autoComplete="tel" /></div>
       <div className="field">
         <label htmlFor="ct">I'm asking about</label>
         <select id="ct" name="topic">
@@ -31,8 +31,10 @@ export function ContactForm() {
       <div className="field full"><label htmlFor="cm">Message</label><textarea id="cm" name="message" rows={6} required /></div>
       <div className="field full">
         {state.error && <p className="error" role="alert">{state.error}</p>}
-        <div><button className="btn" disabled={pending}>{pending ? "Sending…" : "Send message"}</button></div>
-        <p className="small">We never share your details.</p>
+        <div className="form-actions">
+          <button className="btn block-sm" disabled={pending}>{pending ? "Sending…" : "Send message"}</button>
+          <p className="small">We never share your details.</p>
+        </div>
       </div>
     </form>
   );
@@ -60,12 +62,12 @@ export function PartyForm() {
         </select>
       </div>
       <div className="field"><label htmlFor="pd">Preferred date</label><input id="pd" name="date" type="date" /></div>
-      <div className="field"><label htmlFor="pg">Number of guests</label><input id="pg" name="guests" type="number" min={1} /></div>
+      <div className="field"><label htmlFor="pg">Number of guests</label><input id="pg" name="guests" type="number" inputMode="numeric" min={1} /></div>
       <div className="field"><label htmlFor="pa">Guest ages</label><input id="pa" name="ages" placeholder="e.g. 5 to 9, plus parents" /></div>
       <div className="field full"><label htmlFor="pm">Theme ideas or anything else</label><textarea id="pm" name="notes" rows={4} /></div>
       <div className="field full">
         {state.error && <p className="error" role="alert">{state.error}</p>}
-        <div><button className="btn" disabled={pending}>{pending ? "Sending…" : "Send request"}</button></div>
+        <div className="form-actions"><button className="btn block-sm" disabled={pending}>{pending ? "Sending…" : "Send request"}</button></div>
       </div>
     </form>
   );

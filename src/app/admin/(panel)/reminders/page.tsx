@@ -18,8 +18,8 @@ export default function Reminders() {
       </div>
       <div className="notice" style={{ padding: 0 }}>
         {msgs.map(([name, when]) => (
-          <div key={name} style={{ display: "flex", flexWrap: "wrap", gap: "8px 20px", alignItems: "center", padding: "18px 22px", borderBottom: "1px solid #efe7da" }}>
-            <div style={{ flex: "1 1 260px" }}><div style={{ fontWeight: 600 }}>{name}</div><div className="small">{when}</div></div>
+          <div key={name} className="reminder-row">
+            <div className="what"><div style={{ fontWeight: 600 }}>{name}</div><div className="small">{when}</div></div>
             <span className="pill">Email</span>
             <span className="pill">Not connected yet</span>
           </div>
