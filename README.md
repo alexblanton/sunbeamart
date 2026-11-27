@@ -30,7 +30,19 @@ npm run preview            # builds for Workers and runs it in workerd at http:/
 
 `npm run dev` also works for quick UI edits (D1 is available through the Cloudflare dev bindings).
 
-Admin password: set `ADMIN_PASSWORD` (a Worker secret in production, `.dev.vars` locally). The demo falls back to `sunbeam-demo`. Phase 3 replaces this with Cloudflare Access.
+### Admin sign-in
+
+`/admin` picks its sign-in from the Worker's settings (`src/lib/auth.ts`):
+
+| Where | How you sign in |
+| --- | --- |
+| Production | **Cloudflare Access**: enter your email, get a one-time code. Needs `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`. Every admin request's Access token is verified in the app, and `ADMIN_EMAILS` (optional, comma-separated) narrows it further. |
+| Production, fallback | An `ADMIN_PASSWORD` Worker secret, if Access isn't set up. With neither, admin is locked. |
+| Branch previews, `npm run dev` | Demo password `sunbeam-demo` (previews set `DEMO_ADMIN=1`; for `npm run preview` put it in `.dev.vars`). |
+
+Setting up Access (once): Zero Trust > Access > Applications > Add an application > Self-hosted. Domain `sunbeam-arthouse.alex-blanton.workers.dev`, path `admin`. Add an Allow policy for your email. Then copy the team domain (Zero Trust > Settings) and the app's Application Audience (AUD) Tag into `wrangler.jsonc` `vars`.
+
+`npm test` checks the Access token verification.
 
 ## Deploy to Cloudflare
 
@@ -38,7 +50,6 @@ The Worker is `sunbeam-arthouse` (connected to this repo through Workers Builds)
 
 ```bash
 npx wrangler login
-npx wrangler secret put ADMIN_PASSWORD
 npm run deploy             # build + upload; preview URL is sunbeam-arthouse.<account>.workers.dev
 npm run db:migrate         # only when a new file is added under migrations/ (production database)
 npm run db:migrate:preview # same, for the preview database (sunbeam-db-preview) used by PR branch previews

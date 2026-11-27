@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { logout } from "@/app/admin/actions";
+import { currentAdmin } from "@/lib/auth";
 
 const tabs = [
   { href: "/admin", label: "Camps & Events" },
@@ -8,7 +9,8 @@ const tabs = [
   { href: "/admin/reminders", label: "Reminders" },
 ];
 
-export function AdminShell({ current, children }: { current: string; children: React.ReactNode }) {
+export async function AdminShell({ current, children }: { current: string; children: React.ReactNode }) {
+  const who = await currentAdmin();
   return (
     <div className="admin">
       <aside>
@@ -28,6 +30,7 @@ export function AdminShell({ current, children }: { current: string; children: R
           ))}
         </nav>
         <div className="admin-foot">
+          {who?.email && <span className="small" style={{ overflowWrap: "anywhere" }}>Signed in as {who.email}</span>}
           <Link href="/" style={{ fontSize: 14, fontWeight: 600 }}>View the website ↗</Link>
           <form action={logout}><button className="btn outline small" type="submit">Sign out</button></form>
         </div>

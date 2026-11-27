@@ -12,8 +12,17 @@
   ],
   "preview_urls": true,
   "observability": { "enabled": true },
-  // Branch previews (what Workers Builds runs on pull requests) use their own database, never production's.
+  // Admin sign-in (see src/lib/auth.ts). Production uses Cloudflare Access once these two are filled in
+  // from Zero Trust > Access > Applications (team domain, and the app's "Application Audience (AUD) Tag").
+  // Until then, production admin is locked unless an ADMIN_PASSWORD secret is set.
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  },
+  // Branch previews (what Workers Builds runs on pull requests) use their own database, never production's,
+  // and keep the demo admin password since they only hold sample data. Preview vars are not inherited.
   "previews": {
+    "vars": { "DEMO_ADMIN": "1" },
     "d1_databases": [
       { "binding": "DB", "database_name": "sunbeam-db-preview", "database_id": "30ecf35d-099d-4384-b4f3-1aca32e587c2" }
     ]

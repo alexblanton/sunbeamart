@@ -1,23 +1,22 @@
-"use client";
+import { redirect } from "next/navigation";
+import { adminMode, isAdmin } from "@/lib/auth";
+import { LoginForm } from "./LoginForm";
 
-import { useActionState } from "react";
-import { login } from "../actions";
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Admin sign-in", robots: { index: false } };
 
-export default function Login() {
-  const [state, action, pending] = useActionState(login, {} as { error?: string });
-  return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24 }}>
-      <form action={action} className="notice" style={{ width: "100%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 16 }}>
-        <img src="/images/logo.jpg" alt="Sunbeam Art House" width={96} height={96} style={{ mixBlendMode: "multiply" }} />
-        <h1 style={{ fontSize: 28 }}>Sunbeam admin</h1>
-        <div className="field">
-          <label htmlFor="pw">Password</label>
-          <input id="pw" name="password" type="password" autoComplete="current-password" autoFocus required />
+export default async function Login() {
+  const mode = adminMode();
+  // With Cloudflare Access, Access shows its own sign-in screen before /admin loads.
+  if (mode === "access" || (await isAdmin())) redirect("/admin");
+  if (mode === "off")
+    return (
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24 }}>
+        <div className="notice" style={{ maxWidth: 440 }}>
+          <h1 style={{ fontSize: 26, marginBottom: 8 }}>Admin sign-in isn't set up yet</h1>
+          <p className="muted">The admin area is locked until Cloudflare Access (or an admin password) is configured for this site.</p>
         </div>
-        {state.error && <p className="error" role="alert">{state.error}</p>}
-        <button className="btn" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>
-        <p className="small">Demo password: sunbeam-demo</p>
-      </form>
-    </div>
-  );
+      </div>
+    );
+  return <LoginForm demo={mode === "demo"} />;
 }
